@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Prototyp för TAF:s vattenskadeprocess" />
+    <title>Skadeflöde · TAF</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">S</div>
+          <div>
+            <strong>Skadeflöde</strong>
+            <span>TAF · vattenskador</span>
+          </div>
+        </div>
+
+        <nav class="main-nav" aria-label="Huvudmeny">
+          <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span> Översikt</button>
+          <button class="nav-item" data-view="cases"><span class="nav-icon">▤</span> Alla ärenden <span class="nav-count" id="navCaseCount">0</span></button>
+          <button class="nav-item" data-view="tasks"><span class="nav-icon">✓</span> Mina uppgifter <span class="nav-count">3</span></button>
+        </nav>
+
+        <div class="sidebar-section">
+          <p class="eyebrow">PROCESS</p>
+          <button class="process-link" data-process="1"><span class="process-dot urgent"></span> Akutläge</button>
+          <button class="process-link" data-process="4"><span class="process-dot blue"></span> Utredning</button>
+          <button class="process-link" data-process="6"><span class="process-dot violet"></span> Försäkring</button>
+          <button class="process-link" data-process="8"><span class="process-dot green"></span> Åtgärd</button>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <span class="help-icon">?</span>
+            <div><strong>Behöver du stöd?</strong><span>Öppna processguiden</span></div>
+            <span class="arrow">↗</span>
+          </div>
+          <div class="user-chip"><span class="avatar">ML</span><span><strong>Matthias</strong><small>TAF-handläggare</small></span><span class="more">•••</span></div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>TAF</span><span>/</span><strong id="breadcrumbCurrent">Översikt</strong></div>
+          <div class="top-actions"><button class="icon-button" aria-label="Sök">⌕</button><button class="icon-button notification" aria-label="Notiser">♢<i></i></button><button class="primary-button" id="newCaseButton"><span>＋</span> Nytt ärende</button></div>
+        </header>
+
+        <section class="page-header">
+          <div><p class="eyebrow">TISDAG 29 SEPTEMBER 2026</p><h1 id="pageTitle">God morgon, Matthias <span>✦</span></h1><p class="subtitle" id="pageSubtitle">Här är läget i dina skadeärenden idag.</p></div>
+          <div class="header-date"><span class="calendar-icon">▣</span> Denna vecka <span class="chevron">⌄</span></div>
+        </section>
+
+        <section class="kpi-grid" aria-label="Sammanfattning">
+          <article class="kpi-card"><div class="kpi-label"><span class="kpi-icon blue-bg">▤</span><span>Aktiva ärenden</span></div><div class="kpi-value" id="activeCount">0</div><div class="kpi-trend positive">↗ <b>12%</b> <span>mot förra månaden</span></div></article>
+          <article class="kpi-card"><div class="kpi-label"><span class="kpi-icon orange-bg">!</span><span>Akut åtgärd krävs</span></div><div class="kpi-value" id="urgentCount">0</div><div class="kpi-trend warning">Hanteras omgående</div></article>
+          <article class="kpi-card"><div class="kpi-label"><span class="kpi-icon violet-bg">◷</span><span>Väntar på beslut</span></div><div class="kpi-value" id="waitingCount">0</div><div class="kpi-trend neutral">Styrelse eller försäkringsbolag</div></article>
+          <article class="kpi-card"><div class="kpi-label"><span class="kpi-icon green-bg">✓</span><span>Avslutade denna månad</span></div><div class="kpi-value" id="closedCount">0</div><div class="kpi-trend positive">↗ <b>8%</b> <span>mot förra månaden</span></div></article>
+        </section>
+
+        <section class="content-grid">
+          <div class="main-column">
+            <div class="section-heading"><div><h2>Pågående ärenden</h2><p>Följ status och nästa steg i processen</p></div><button class="text-button" id="showAllButton">Visa alla <span>→</span></button></div>
+            <div class="case-list" id="caseList"></div>
+            <div class="empty-state hidden" id="emptyState"><div class="empty-icon">✓</div><h3>Inga ärenden matchar filtret</h3><p>Prova en annan status eller registrera ett nytt ärende.</p></div>
+
+            <div class="section-heading lower-heading"><div><h2>Processöversikt</h2><p>Så långt har ärendena kommit i flödet</p></div><button class="text-button" id="guideButton">Öppna processguide <span>↗</span></button></div>
+            <div class="process-overview" id="processOverview"></div>
+          </div>
+
+          <aside class="right-column">
+            <section class="panel attention-panel"><div class="panel-heading"><div><h3>Behöver din uppmärksamhet</h3><p>Prioriterat just nu</p></div><span class="attention-badge" id="attentionCount">0</span></div><div id="attentionList"></div></section>
+            <section class="panel activity-panel"><div class="panel-heading"><div><h3>Senaste aktivitet</h3><p>Händelser i dina ärenden</p></div><button class="more-button">•••</button></div><div class="timeline" id="timeline"></div></section>
+            <section class="quote-card"><span class="quote-mark">“</span><p>Rätt åtgärd i rätt tid minskar både skadan och administrationen.</p><span class="quote-source">TAF vattenskadeprocess</span></section>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="caseModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <div class="modal-header"><div><p class="eyebrow">REGISTRERA NYTT</p><h2 id="modalTitle">Nytt skadeärende</h2></div><button class="close-button" id="closeModal" aria-label="Stäng">×</button></div>
+        <form id="caseForm">
+          <div class="form-grid"><label>Förening<input name="association" required placeholder="Ex. Brf Solgläntan" /></label><label>Fastighet / lägenhet<input name="property" required placeholder="Ex. A-gatan 12, lgh 1203" /></label></div>
+          <div class="form-grid"><label>Kontaktperson<input name="contact" required placeholder="Namn och telefonnummer" /></label><label>Inkomstdatum<input name="received" type="date" required /></label></div>
+          <label>Beskrivning av skadan<textarea name="description" required rows="3" placeholder="Vad har hänt? Ange det som är känt just nu."></textarea></label>
+          <div class="form-grid"><label>Akutläge<select name="priority"><option value="normal">Inte akut</option><option value="urgent">Akut – åtgärd krävs</option><option value="handled">Akut åtgärd redan utförd</option></select></label><label>Ansvarig handläggare<input name="owner" value="Matthias" required /></label></div>
+          <div class="form-grid"><label>Hanteringsomfattning<select name="scope"><option value="full">TAF/SBC hanterar hela processen</option><option value="acute-only">TAF/SBC hanterar endast akutåtgärd</option><option value="board-takeover">Styrelsen tar över efter akutåtgärd</option></select></label><label>Akutbeställning<select name="orderChannel"><option value="not-needed">Inte aktuell ännu</option><option value="phone">Telefon – referens läggs till senare</option><option value="system">Beställd via system</option><option value="email">E-post med ärendereferens</option></select></label></div>
+          <div class="form-grid"><label>Försäkringsspår<select name="insuranceModel"><option value="undecided">Inte bedömt ännu</option><option value="insurer">Försäkringsbolagets entreprenör</option><option value="taf">TAF/SBC:s entreprenör</option><option value="board">Styrelsen/boende hanterar</option></select></label><label>Försäkringsbolag<input name="insurer" placeholder="Ex. If, Folksam eller Länsförsäkringar" /></label></div>
+          <div class="form-note"><span>ⓘ</span> Verktyget föreslår nästa steg. Beslut om beställning, försäkring och avslut fattas av behörig person.</div>
+          <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Avbryt</button><button type="submit" class="primary-button">Skapa ärende <span>→</span></button></div>
+        </form>
+      </div>
+    </div>
+    <div class="toast hidden" id="toast"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
